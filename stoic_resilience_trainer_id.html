@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pelatih Ketahanan Emosional Stoik</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E0E7EF; /* Calm light grayish blue */
+            color: #2D3748; /* Dark gray for text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        #app-container {
+            background-color: #FFFFFF;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none; /* Hidden by default, shown by JS */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: #2C5282; /* Calm dark blue for headings */
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            color: #4A5568; /* Slightly lighter gray for paragraphs */
+        }
+
+        #scenario-text {
+            font-style: italic;
+            font-size: 1.15em;
+            color: #2C5282;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #F0F4F8;
+            border-radius: 8px;
+            border-left: 4px solid #4A90E2;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #3B82F6; /* Primary blue */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2563EB; /* Darker primary blue */
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.secondary {
+            background-color: #60A5FA; /* Lighter blue for secondary actions */
+        }
+
+        button.secondary:hover {
+            background-color: #3B82F6;
+        }
+        
+        button:disabled {
+            background-color: #9CA3AF; /* Gray when disabled */
+            cursor: not-allowed;
+        }
+
+        #impulsive-message {
+            color: #D97706; /* Amber/Orange for caution */
+            background-color: #FEF3C7; /* Light yellow background */
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #FCD34D;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-align: left;
+            font-weight: bold;
+            color: #2C5282;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #CBD5E0; /* Light gray border */
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
+        #stoic-response-text-container {
+            background-color: #EBF8FF; /* Very light blue */
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-left: 4px solid #3B82F6;
+        }
+        
+        #stoic-response-text-container p {
+            color: #2D3748;
+            font-size: 1.05em;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 600px) {
+            .button-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            button {
+                width: auto;
+                min-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <a href="stoic_resilience_trainer.html" id="language-toggle" title="Beralih ke Bahasa Inggris" style="position:absolute; top:15px; right:15px; font-weight:bold; color:#3B82F6; text-decoration:none; cursor:pointer;">English</a>
+        <h1>Pelatih Ketahanan Stoik</h1>
+
+        <!-- Screen 1: Scenario Presentation -->
+        <div id="scenario-screen" class="screen">
+            <p id="scenario-text"></p>
+            <div id="impulsive-message" style="display:none;"></div>
+            <div class="button-group">
+                <button id="impulsive-choice-btn"></button>
+                <button id="reflective-choice-btn" class="secondary"></button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Pause and Reflect - Dichotomy of Control -->
+        <div id="reflection-screen" class="screen">
+            <h2>Berhenti dan Renungkan</h2>
+            <p>Terapkan Dikotomi Kontrol. Aspek mana dari situasi ini yang benar-benar dalam kendali Anda, dan mana yang tidak?</p>
+            
+            <label for="can-control">Hal yang Bisa Saya Kendalikan:</label>
+            <textarea id="can-control" rows="4" placeholder="misalnya, Pikiran saya, tindakan saya, usaha saya, kata-kata saya"></textarea>
+            
+            <label for="cannot-control">Hal yang Tidak Bisa Saya Kendalikan:</label>
+            <textarea id="cannot-control" rows="4" placeholder="misalnya, Pendapat/tindakan orang lain, kejadian masa lalu, hasil eksternal"></textarea>
+            
+            <button id="submit-reflection-btn">Lanjutkan Refleksi</button>
+        </div>
+
+        <!-- Screen 3: Control Feedback -->
+        <div id="control-feedback-screen" class="screen">
+            <h2>Fokuskan Energi Anda</h2>
+            <p>Bagus. Ingat, kekuatan dan ketenangan sejati datang dari memfokuskan energi Anda pada apa yang <em>bisa</em> Anda kendalikan dan mengembangkan penerimaan terhadap apa yang <em>tidak bisa</em>. Ini adalah dasar ketahanan Stoik.</p>
+            <button id="show-calm-response-btn">Tampilkan Respon Tenang</button>
+        </div>
+
+        <!-- Screen 4: Calm Response -->
+        <div id="calm-response-screen" class="screen">
+            <h2>Jalan Stoik ke Depan</h2>
+            <div id="stoic-response-text-container">
+                <p id="stoic-response-text"></p>
+            </div>
+            <button id="try-another-scenario-btn">Coba Skenario Lain</button>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                id: 1,
+                scenarioText: "Rekan kerja Anda mengambil kredit atas ide Anda dalam sebuah rapat.",
+                impulsiveChoiceText: "Bereaksi: Hadapi mereka dengan agresif!",
+                reflectiveChoiceText: "Renungkan: Berhenti & Pertimbangkan",
+                stoicResponseText: "Akui komentarnya, lalu tambahkan perspektif Anda dengan tenang. Misalnya: 'Terima kasih telah menyoroti itu, [Rekan Kerja]. Untuk melanjutkan, gagasan asli saya juga mencakup [detail] untuk [manfaat]. Saya senang menjelaskan bagaimana kita bisa melanjutkan.' Jika perlu, Anda juga bisa berbicara dengan manajer atau rekan kerja secara pribadi nanti, fokus pada kolaborasi dan komunikasi yang jelas tentang kontribusi Anda."
+            },
+            {
+                id: 2,
+                scenarioText: "Seorang teman mengkritik pilihan gaya hidup Anda.",
+                impulsiveChoiceText: "Bereaksi: Berdebat dengan panas!",
+                reflectiveChoiceText: "Renungkan: Akui & Analisis",
+                stoicResponseText: "Dengarkan perspektif mereka tanpa langsung menjadi defensif. Anda bisa berkata: 'Saya mengerti Anda melihatnya berbeda, dan saya menghargai Anda berbagi pemikiran. Pilihan ini terasa tepat bagi saya saat ini, tapi saya akan mempertimbangkan apa yang Anda katakan.' Ingat, pendapat mereka adalah hal eksternal yang tidak bisa Anda kendalikan; pilihan yang beralasan dan ketenangan pikiran adalah hal internal."
+            },
+            {
+                id: 3,
+                scenarioText: "Anda menerima tiket parkir yang tidak adil.",
+                impulsiveChoiceText: "Bereaksi: Berteriak dan membantah dengan marah!",
+                reflectiveChoiceText: "Renungkan: Tinjau Detail dengan Tenang",
+                stoicResponseText: "Pertama, kendalikan frustrasi awal Anda. Kemudian, tinjau tiket dan keadaannya dengan tenang dan objektif. Jika tampak benar-benar tidak adil, kumpulkan bukti (foto, cap waktu, peraturan). Ikuti proses banding resmi dengan hormat dan faktual. Fokus pada penyajian kasus Anda dengan jelas, bukan pada ketidakadilan yang dirasakan."
+            },
+            {
+                id: 4,
+                scenarioText: "Anda terjebak macet parah dan akan terlambat untuk janji penting.",
+                impulsiveChoiceText: "Bereaksi: Membunyikan klakson dan menjadi gelisah!",
+                reflectiveChoiceText: "Renungkan: Terima & Sesuaikan",
+                stoicResponseText: "Sadari bahwa kemacetan berada di luar kendali Anda. Fokus pada apa yang *bisa* Anda kendalikan: beri tahu mereka yang menunggu bahwa Anda akan terlambat. Gunakan waktu tak terduga ini secara konstruktif – mungkin dengarkan buku audio, podcast, atau lakukan pernapasan sadar. Marah tidak akan mengubah kemacetan tapi akan merusak ketenangan Anda."
+            },
+            {
+                id: 5,
+                scenarioText: "Anda membuat kesalahan besar di tempat kerja yang akan berdampak pada tim Anda.",
+                impulsiveChoiceText: "Bereaksi: Panik dan mencoba menyembunyikannya!",
+                reflectiveChoiceText: "Renungkan: Akui & Pecahkan Masalah",
+                stoicResponseText: "Akui kesalahan pada diri sendiri tanpa menyalahkan berlebihan. Kemudian, segera dan transparan beri tahu orang yang relevan. Fokus pada solusi: 'Saya telah mengidentifikasi kesalahan yang saya buat terkait [X]. Saya bertanggung jawab penuh. Pemikiran awal saya untuk mengatasinya adalah [Y dan Z]. Saya terbuka untuk saran bagaimana kita bisa mengatasinya.' Integritas dan pemecahan masalah proaktif adalah hal yang bisa Anda kendalikan."
+            }
+        ];
+
+        let currentScenarioIndex = 0;
+        let currentScenario = {};
+
+        // DOM Elements
+        const screens = {
+            scenario: document.getElementById('scenario-screen'),
+            reflection: document.getElementById('reflection-screen'),
+            controlFeedback: document.getElementById('control-feedback-screen'),
+            calmResponse: document.getElementById('calm-response-screen')
+        };
+
+        const scenarioTextEl = document.getElementById('scenario-text');
+        const impulsiveMessageEl = document.getElementById('impulsive-message');
+        const impulsiveChoiceBtn = document.getElementById('impulsive-choice-btn');
+        const reflectiveChoiceBtn = document.getElementById('reflective-choice-btn');
+        
+        const canControlTextarea = document.getElementById('can-control');
+        const cannotControlTextarea = document.getElementById('cannot-control');
+        const submitReflectionBtn = document.getElementById('submit-reflection-btn');
+        
+        const showCalmResponseBtn = document.getElementById('show-calm-response-btn');
+        
+        const stoicResponseTextEl = document.getElementById('stoic-response-text');
+        const tryAnotherScenarioBtn = document.getElementById('try-another-scenario-btn');
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.style.display = 'none');
+            if (screens[screenName]) {
+                screens[screenName].style.display = 'block';
+            }
+        }
+
+        function loadScenario(index) {
+            currentScenario = scenarios[index];
+            scenarioTextEl.textContent = currentScenario.scenarioText;
+            impulsiveChoiceBtn.textContent = currentScenario.impulsiveChoiceText;
+            reflectiveChoiceBtn.textContent = currentScenario.reflectiveChoiceText;
+            
+            impulsiveMessageEl.style.display = 'none'; // Hide impulsive message
+            canControlTextarea.value = ''; // Clear textareas
+            cannotControlTextarea.value = '';
+
+            showScreen('scenario');
+        }
+
+        function handleImpulsiveChoice() {
+            impulsiveMessageEl.textContent = "Ini adalah respons reaktif yang umum. Meskipun dapat dimengerti, ini seringkali bukan yang paling efektif. Mari berhenti sejenak dan renungkan.";
+            impulsiveMessageEl.style.display = 'block';
+
+            impulsiveChoiceBtn.disabled = true;
+            reflectiveChoiceBtn.disabled = true;
+
+            setTimeout(() => {
+                impulsiveMessageEl.style.display = 'none';
+                showScreen('reflection');
+                impulsiveChoiceBtn.disabled = false;
+                reflectiveChoiceBtn.disabled = false;
+            }, 3500);
+        }
+
+        function handleReflectiveChoice() {
+            showScreen('reflection');
+        }
+
+        function handleSubmitReflection() {
+            // Optionally, you could read values from canControlTextarea and cannotControlTextarea
+            // For now, just proceed to the next screen
+            showScreen('controlFeedback');
+        }
+
+        function handleShowCalmResponse() {
+            stoicResponseTextEl.textContent = currentScenario.stoicResponseText;
+            showScreen('calmResponse');
+        }
+
+        function handleTryAnotherScenario() {
+            currentScenarioIndex = (currentScenarioIndex + 1) % scenarios.length;
+            loadScenario(currentScenarioIndex);
+        }
+
+        // Event Listeners
+        impulsiveChoiceBtn.addEventListener('click', handleImpulsiveChoice);
+        reflectiveChoiceBtn.addEventListener('click', handleReflectiveChoice);
+        submitReflectionBtn.addEventListener('click', handleSubmitReflection);
+        showCalmResponseBtn.addEventListener('click', handleShowCalmResponse);
+        tryAnotherScenarioBtn.addEventListener('click', handleTryAnotherScenario);
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            // Shuffle scenarios for variety, if desired
+            // scenarios.sort(() => Math.random() - 0.5); 
+            loadScenario(currentScenarioIndex);
+        });
+    </script>
+</body>
+</html>

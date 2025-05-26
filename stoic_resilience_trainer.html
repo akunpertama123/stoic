@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stoic Emotional Resilience Trainer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E0E7EF; /* Calm light grayish blue */
+            color: #2D3748; /* Dark gray for text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        #app-container {
+            background-color: #FFFFFF;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none; /* Hidden by default, shown by JS */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: #2C5282; /* Calm dark blue for headings */
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            color: #4A5568; /* Slightly lighter gray for paragraphs */
+        }
+
+        #scenario-text {
+            font-style: italic;
+            font-size: 1.15em;
+            color: #2C5282;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #F0F4F8;
+            border-radius: 8px;
+            border-left: 4px solid #4A90E2;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #3B82F6; /* Primary blue */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2563EB; /* Darker primary blue */
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.secondary {
+            background-color: #60A5FA; /* Lighter blue for secondary actions */
+        }
+
+        button.secondary:hover {
+            background-color: #3B82F6;
+        }
+        
+        button:disabled {
+            background-color: #9CA3AF; /* Gray when disabled */
+            cursor: not-allowed;
+        }
+
+        #impulsive-message {
+            color: #D97706; /* Amber/Orange for caution */
+            background-color: #FEF3C7; /* Light yellow background */
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #FCD34D;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-align: left;
+            font-weight: bold;
+            color: #2C5282;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #CBD5E0; /* Light gray border */
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
+        #stoic-response-text-container {
+            background-color: #EBF8FF; /* Very light blue */
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-left: 4px solid #3B82F6;
+        }
+        
+        #stoic-response-text-container p {
+            color: #2D3748;
+            font-size: 1.05em;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 600px) {
+            .button-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            button {
+                width: auto;
+                min-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <a href="stoic_resilience_trainer_id.html" id="language-toggle" title="Switch to Indonesian" style="position:absolute; top:15px; right:15px; font-weight:bold; color:#3B82F6; text-decoration:none; cursor:pointer;">Bahasa Indonesia</a>
+        <h1>Stoic Resilience Trainer</h1>
+
+        <!-- Screen 1: Scenario Presentation -->
+        <div id="scenario-screen" class="screen">
+            <p id="scenario-text"></p>
+            <div id="impulsive-message" style="display:none;"></div>
+            <div class="button-group">
+                <button id="impulsive-choice-btn"></button>
+                <button id="reflective-choice-btn" class="secondary"></button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Pause and Reflect - Dichotomy of Control -->
+        <div id="reflection-screen" class="screen">
+            <h2>Pause and Reflect</h2>
+            <p>Apply the Dichotomy of Control. What aspects of this situation are truly within your control, and what are not?</p>
+            
+            <label for="can-control">Things I Can Control:</label>
+            <textarea id="can-control" rows="4" placeholder="e.g., My thoughts, my actions, my effort, my words"></textarea>
+            
+            <label for="cannot-control">Things I Cannot Control:</label>
+            <textarea id="cannot-control" rows="4" placeholder="e.g., Other people's opinions/actions, past events, external outcomes"></textarea>
+            
+            <button id="submit-reflection-btn">Continue Reflection</button>
+        </div>
+
+        <!-- Screen 3: Control Feedback -->
+        <div id="control-feedback-screen" class="screen">
+            <h2>Focus Your Energy</h2>
+            <p>Excellent. Remember, true power and tranquility come from focusing your energy on what you <em>can</em> control and cultivating acceptance for what you <em>cannot</em>. This is a cornerstone of Stoic resilience.</p>
+            <button id="show-calm-response-btn">Show a Calm Response</button>
+        </div>
+
+        <!-- Screen 4: Calm Response -->
+        <div id="calm-response-screen" class="screen">
+            <h2>A Stoic Path Forward</h2>
+            <div id="stoic-response-text-container">
+                <p id="stoic-response-text"></p>
+            </div>
+            <button id="try-another-scenario-btn">Try Another Scenario</button>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                id: 1,
+                scenarioText: "Your coworker takes credit for your idea in a meeting.",
+                impulsiveChoiceText: "React: Confront them aggressively!",
+                reflectiveChoiceText: "Reflect: Pause & Consider",
+                stoicResponseText: "Acknowledge their comment, then calmly add your perspective. For example: 'Thanks for highlighting that, [Coworker]. To build on that, my original thought was to also incorporate [detail] for [benefit]. I'd be happy to elaborate on how we can proceed.' If appropriate, you can also speak to your manager or coworker privately later, focusing on collaboration and clear communication of your contributions."
+            },
+            {
+                id: 2,
+                scenarioText: "A friend criticizes your lifestyle choices.",
+                impulsiveChoiceText: "React: Argue heatedly!",
+                reflectiveChoiceText: "Reflect: Acknowledge & Analyze",
+                stoicResponseText: "Listen to their perspective without immediately becoming defensive. You might say: 'I understand you see it differently, and I appreciate you sharing your thoughts. These choices feel right for me at this time, but I'll consider what you've said.' Remember, their opinion is external to your control; your reasoned choices and peace of mind are internal."
+            },
+            {
+                id: 3,
+                scenarioText: "You receive an unfair parking ticket.",
+                impulsiveChoiceText: "React: Yell and dispute angrily!",
+                reflectiveChoiceText: "Reflect: Calmly Review Details",
+                stoicResponseText: "First, manage your initial frustration. Then, calmly and objectively review the ticket and the circumstances. If it appears genuinely unfair, gather any evidence (photos, time stamps, regulations). Follow the official dispute process respectfully and factually. Focus on presenting your case clearly, not on the perceived injustice."
+            },
+            {
+                id: 4,
+                scenarioText: "You're stuck in a massive traffic jam and will be late for an important appointment.",
+                impulsiveChoiceText: "React: Honk and get agitated!",
+                reflectiveChoiceText: "Reflect: Accept & Adapt",
+                stoicResponseText: "Recognize that the traffic is outside your control. Focus on what you *can* control: inform those expecting you that you'll be late. Use the unexpected time constructively – perhaps listen to an audiobook, a podcast, or simply practice mindful breathing. Getting angry won't change the traffic but will spoil your peace."
+            },
+            {
+                id: 5,
+                scenarioText: "You made a significant mistake at work that will impact your team.",
+                impulsiveChoiceText: "React: Panic and try to hide it!",
+                reflectiveChoiceText: "Reflect: Own it & Problem-solve",
+                stoicResponseText: "Acknowledge the mistake to yourself without excessive self-blame. Then, promptly and transparently inform the relevant people. Focus on solutions: 'I've identified a mistake I made regarding [X]. I take full responsibility. My initial thoughts on how to mitigate this are [Y and Z]. I'm open to suggestions on how we can best address this.' Your integrity and proactive problem-solving are within your control."
+            }
+        ];
+
+        let currentScenarioIndex = 0;
+        let currentScenario = {};
+
+        // DOM Elements
+        const screens = {
+            scenario: document.getElementById('scenario-screen'),
+            reflection: document.getElementById('reflection-screen'),
+            controlFeedback: document.getElementById('control-feedback-screen'),
+            calmResponse: document.getElementById('calm-response-screen')
+        };
+
+        const scenarioTextEl = document.getElementById('scenario-text');
+        const impulsiveMessageEl = document.getElementById('impulsive-message');
+        const impulsiveChoiceBtn = document.getElementById('impulsive-choice-btn');
+        const reflectiveChoiceBtn = document.getElementById('reflective-choice-btn');
+        
+        const canControlTextarea = document.getElementById('can-control');
+        const cannotControlTextarea = document.getElementById('cannot-control');
+        const submitReflectionBtn = document.getElementById('submit-reflection-btn');
+        
+        const showCalmResponseBtn = document.getElementById('show-calm-response-btn');
+        
+        const stoicResponseTextEl = document.getElementById('stoic-response-text');
+        const tryAnotherScenarioBtn = document.getElementById('try-another-scenario-btn');
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.style.display = 'none');
+            if (screens[screenName]) {
+                screens[screenName].style.display = 'block';
+            }
+        }
+
+        function loadScenario(index) {
+            currentScenario = scenarios[index];
+            scenarioTextEl.textContent = currentScenario.scenarioText;
+            impulsiveChoiceBtn.textContent = currentScenario.impulsiveChoiceText;
+            reflectiveChoiceBtn.textContent = currentScenario.reflectiveChoiceText;
+            
+            impulsiveMessageEl.style.display = 'none'; // Hide impulsive message
+            canControlTextarea.value = ''; // Clear textareas
+            cannotControlTextarea.value = '';
+
+            showScreen('scenario');
+        }
+
+        function handleImpulsiveChoice() {
+            impulsiveMessageEl.textContent = "This is a common, reactive response. While understandable, it's often not the most effective. Let's pause and reflect instead.";
+            impulsiveMessageEl.style.display = 'block';
+
+            impulsiveChoiceBtn.disabled = true;
+            reflectiveChoiceBtn.disabled = true;
+
+            setTimeout(() => {
+                impulsiveMessageEl.style.display = 'none';
+                showScreen('reflection');
+                impulsiveChoiceBtn.disabled = false;
+                reflectiveChoiceBtn.disabled = false;
+            }, 3500);
+        }
+
+        function handleReflectiveChoice() {
+            showScreen('reflection');
+        }
+
+        function handleSubmitReflection() {
+            // Optionally, you could read values from canControlTextarea and cannotControlTextarea
+            // For now, just proceed to the next screen
+            showScreen('controlFeedback');
+        }
+
+        function handleShowCalmResponse() {
+            stoicResponseTextEl.textContent = currentScenario.stoicResponseText;
+            showScreen('calmResponse');
+        }
+
+        function handleTryAnotherScenario() {
+            currentScenarioIndex = (currentScenarioIndex + 1) % scenarios.length;
+            loadScenario(currentScenarioIndex);
+        }
+
+        // Event Listeners
+        impulsiveChoiceBtn.addEventListener('click', handleImpulsiveChoice);
+        reflectiveChoiceBtn.addEventListener('click', handleReflectiveChoice);
+        submitReflectionBtn.addEventListener('click', handleSubmitReflection);
+        showCalmResponseBtn.addEventListener('click', handleShowCalmResponse);
+        tryAnotherScenarioBtn.addEventListener('click', handleTryAnotherScenario);
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            // Shuffle scenarios for variety, if desired
+            // scenarios.sort(() => Math.random() - 0.5); 
+            loadScenario(currentScenarioIndex);
+        });
+    </script>
+</body>
+</html>
